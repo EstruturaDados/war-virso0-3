@@ -117,9 +117,37 @@ int main() { // função principal do programa, onde a execução começa
             }
             break; // Sai do case 2
 
-            case 3:
+            case 3:{ // Caso a opção seja 3, inicia a fase de ataque entre os territórios cadastrados
+                if (totalterritorios < 2) { // verifica se há pelo menos 2 territórios cadastrados para realizar um ataque, caso contrário, informa que é necessário ter pelo menos 2 territórios
+                    printf("\nPrecisa de pelo menos 2 territorios.\n"); // Informa que é necessário ter pelo menos 2 territórios para realizar um ataque
+                    break; // Sai do case 3 se não houver territórios suficientes para o ataque
+                }
 
-            case 4: // Caso a opção seja 3, informa que o programa está saindo
+                int atk, def; // Declara variáveis para armazenar os índices do território atacante e defensor escolhidos pelo usuário
+
+                printf("\nEscolha o territorio atacante: "); //solicita ao usuário que escolha o território atacante, exibindo uma mensagem de prompt
+                scanf("%d", &atk); // Lê o índice do território atacante escolhido pelo usuário e armazena na variável 'atk'
+
+                printf("\nEscolha o territorio defensor: "); // solicita ao usuário que escolha o território defensor, exibindo uma mensagem de prompt
+                scanf("%d", &def); // lê o índice do território defensor escolhido pelo usuário e armazena na variável 'def'
+                limparbufferentrada(); // limpa o buffer após ler os índices do atacante e defensor para garantir que não haja caracteres residuais que possam interferir nas próximas entradas do usuário
+
+                if (atk < 0 || atk >= totalterritorios || // verifica se os índices do território atacante e defensor são válidos, ou seja, se estão dentro do intervalo de territórios cadastrados
+                    def < 0 || def >= totalterritorios) { // Se os índices forem inválidos, informa o usuário e sai do case 3
+                    printf("\nIndices invalidos.\n"); //informa que os índices são inválidos
+                    break; // Sai do case 3 se os índices forem inválidos
+                }
+
+                if (atk == def) { // verifica se o território atacante e defensor são o mesmo, o que não é permitido, e informa o usuário sobre a impossibilidade de atacar a si mesmo
+                    printf("\nNao pode atacar a si mesmo.\n"); // informa que não é possível atacar a si mesmo
+                    break; // sai do case 3 se o usuário tentar atacar a si mesmo, garantindo que o ataque seja realizado entre territórios diferentes
+                }
+
+                atacar(territorios, totalterritorios, atk, def); // chama a função de ataque, passando o array de territórios, o total de territórios cadastrados, e os índices do território atacante e defensor escolhidos pelo usuário para realizar o ataque e atualizar o estado dos territórios envolvidos
+                break; // sai do case 3 após realizar o ataque
+            }
+            
+            case 4: // Caso a opção seja 4, informa que o programa está saindo
             printf("Saindo do programa...\n");
             break;
 
@@ -127,6 +155,8 @@ int main() { // função principal do programa, onde a execução começa
             printf("Opcao invalida. Tente novamente.\n");
         }
     } while (opcao != 4); // O loop continua enquanto a opção escolhida pelo usuário não for 3 (sair do programa)
+
+    free(territorios); // Libera a memória alocada para o array de territórios, garantindo que não haja vazamento de memória após o término do programa
 
     return 0; // Retorna 0 para indicar que o programa terminou com sucesso
 };
