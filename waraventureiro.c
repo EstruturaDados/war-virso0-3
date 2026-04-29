@@ -1,7 +1,8 @@
 #include <stdio.h>
 #include <string.h>
+#include <stdlib.h>
+#include <time.h>
 
-#define MAX_TERRITORIOS 5 // define o número máximo de territórios que podem ser cadastrados
 
 struct Territorio { 
     char nome[30]; // campo para o nome do territorio, um array de caracteres
@@ -14,15 +15,60 @@ void limparbufferentrada() {  // define uma função para limpar o buffer de ent
     while ((c = getchar()) != '\n' && c != EOF);  // Lê caracteres até encontrar nova linha ou fim de arquivo, limpando o buffer
 }
 
-void atacar(struct Territorio*atacante, struct Territorio* defensor) {
-    int dadoAtk = rand() % 6+1;
-    int dadoDef=rand() % 6+1;
+void atacar(struct Territorio* territorios, int total, int atk, int def) { //define a função de ataque, que recebe um array de territórios, o total de territórios, e os índices do território atacante e defensor
+    struct Territorio* atacante = &territorios[atk];  // cria um ponteiro para o território atacante, apontando para o elemento do array de territórios correspondente ao índice do atacante
+    struct Territorio* defensor = &territorios[def]; // cria um ponteiro para o território defensor, apontando para o elemento do array de territórios correspondente ao índice do defensor
 
+    int dadoAtk = rand() % 6+1; // gera um número aleatório entre 1 e 6 para o ataque, simulando o lançamento de um dado
+    int dadoDef=rand() % 6+1; // gera um número aleatório entre 1 e 6 para a defesa, simulando o lançamento de um dado
+
+    printf("\n --- ATAQUE ---\n"); // imprime um cabeçalho para a seção de ataque
+    printf("Atacante(%s) rolou %d\n", atacante -> nome, dadoAtk); // imprime o nome do território atacante e o resultado do dado de ataque
+    printf("Defensor(%s) rolou %d\n", defensor ->nome, dadoDef); // imprime o nome do território defensor e o resultado do dado de defesa
+
+    if (dadoAtk > dadoDef){ // compara os resultados dos dados para determinar o vencedor do ataque
+        printf("VITORIA DO ATACANTE! O Defensor perdeu 1 tropa"); // se o ataque for bem-sucedido, imprime uma mensagem indicando a vitória do atacante e a perda de uma tropa pelo defensor
+
+        defensor ->tropas --; // decrementa o número de tropas do território defensor em 1
+
+        if(defensor-> tropas <= 0) { // verifica se o território defensor ficou sem tropas após a perda
+            printf("Territorio Conquistado!\n"); // se o território defensor for conquistado (sem tropas restantes), imprime uma mensagem indicando a conquista do território
+            
+            strcpy(defensor->cor, atacante->cor); // copia a cor do território atacante para o território defensor, indicando que o defensor agora pertence ao atacante
+            defensor->tropas = atacante->tropas / 2; // o número de tropas transferidas para o território conquistado é a metade do número de tropas do atacante, e o número de tropas do atacante é reduzido pela metade
+            atacante -> tropas /= 2; // divide o número de tropas do atacante por 2, reduzindo-o pela metade após a conquista do território defensor
+        }
+    } else {
+        printf("defensor venceu\n"); // se o defensor vencer o ataque, imprime uma mensagem indicando a vitória do defensor e a perda de uma tropa pelo atacante
+        atacante->tropas -=1; // decrementa o número de tropas do território atacante em 1, indicando a perda de uma tropa pelo atacante
+        }
+
+        printf("\n--- ESTADO ATUAL ---\n"); // imprime um cabeçalho para a seção de estado atual dos territórios
+        for (int i=0; i < total; i++) { // loop para percorrer todos os territórios e imprimir suas informações atuais após o ataque
+            printf("[%d] %s / Cor: %s / %d\n", // imprime o índice do território, seu nome, cor e número de tropas
+            i, // índice do território no array
+            territorios[i].nome, // nome do território
+            territorios[i].cor, // cor do território
+            territorios[i].tropas); // número de tropas no território
+        }
 }
 
-int main() {
-    struct Territorio territorios[MAX_TERRITORIOS]; // declara um array de estruturas Territorio para armazenar até MAX_TERRITORIOS territórios
-    int totalterritorios = 0; // inicializa o contador de territórios cadastrados com 0
+
+int main() { // função principal do programa, onde a execução começa
+    srand(time(NULL)); // inicializa a semente para a geração de números aleatórios usando o tempo atual, garantindo que os resultados dos dados sejam diferentes a cada execução do programa
+
+    int capacidade; // declara uma variável inteira para armazenar a capacidade máxima de territórios que o usuário deseja cadastrar
+    printf("Digite o numero maximo de territorios: "); // solicita ao usuário que digite o número máximo de territórios que deseja cadastrar
+    scanf("%d", &capacidade); // lê a capacidade máxima de territórios como um inteiro e armazena na variável 'capacidade'
+    limparbufferentrada(); // chama a função para limpar o buffer de entrada após ler a capacidade, garantindo que não haja caracteres residuais que possam interferir nas próximas entradas do usuário
+
+    struct Territorio* territorios = malloc(capacidade * sizeof(struct Territorio)); // aloca dinamicamente um array de estruturas 'Territorio' com o tamanho definido pela capacidade máxima de territórios, usando malloc para reservar a memória necessária
+    if (territorios == NULL){ // verifica se a alocação de memória foi bem-sucedida, verificando se o ponteiro 'territorios' é NULL
+        printf("Erro ao alocar memoria.\n"); // se a alocação falhar, imprime uma mensagem de erro e retorna 1 para indicar que o programa terminou com um erro
+        return 1; // retorna 1 para indicar que o programa terminou com um erro devido à falha na alocação de memória
+    }
+
+    int totalterritorios = 0; // declara e inicializa uma variável inteira para contar o total de territórios cadastrados, começando em 0
     int opcao; // declara uma variável para armazenar a opção escolhida pelo usuário
 
     do {
@@ -38,7 +84,7 @@ int main() {
         switch (opcao) { // Inicia uma estrutura switch baseada na opção escolhida
             case 1: // Caso a opção seja 1, cadastra um novo território
             printf("\nCadastro de Novo Territorio\n"); // Imprime o cabeçalho do cadastro de território
-            if (totalterritorios < MAX_TERRITORIOS) { // Verifica se ainda há espaço para cadastrar mais territórios
+            if (totalterritorios < capacidade) { // Verifica se ainda há espaço para cadastrar mais territórios
                 printf("Digite o nome do territorio:"); // Solicita o nome do território
                 fgets(territorios[totalterritorios].nome,30,stdin); // Lê o nome do território usando fgets
                 territorios[totalterritorios].nome[strcspn(territorios[totalterritorios].nome,"\n")] = '\0'; // Remove o caractere de nova linha do final da string
