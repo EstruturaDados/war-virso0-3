@@ -14,6 +14,12 @@ void limparbufferentrada() {  // define uma função para limpar o buffer de ent
     while ((c = getchar()) != '\n' && c != EOF);  // Lê caracteres até encontrar nova linha ou fim de arquivo, limpando o buffer
 }
 
+void atacar(struct Territorio*atacante, struct Territorio* defensor) {
+    int dadoAtk = rand() % 6+1;
+    int dadoDef=rand() % 6+1;
+
+}
+
 int main() {
     struct Territorio territorios[MAX_TERRITORIOS]; // declara um array de estruturas Territorio para armazenar até MAX_TERRITORIOS territórios
     int totalterritorios = 0; // inicializa o contador de territórios cadastrados com 0
@@ -74,7 +80,7 @@ int main() {
             default: // Caso a opção seja inválida, informa o usuário e solicita que tente novamente
             printf("Opcao invalida. Tente novamente.\n");
         }
-    } while (opcao != 3); // O loop continua enquanto a opção escolhida pelo usuário não for 3 (sair do programa)
+    } while (opcao != 4); // O loop continua enquanto a opção escolhida pelo usuário não for 3 (sair do programa)
 
     return 0; // Retorna 0 para indicar que o programa terminou com sucesso
 };
