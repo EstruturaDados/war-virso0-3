@@ -72,7 +72,7 @@ int main() { // função principal do programa, onde a execução começa
     int opcao; // declara uma variável para armazenar a opção escolhida pelo usuário
 
     do {
-        printf("\nMenu War:\n"); // imprime o cabeçalho do menu
+        printf("\n--- MENU WAR ---\n"); // imprime o cabeçalho do menu
         printf("1.Cadastrar Territorio\n"); // imprime a opção 1 para cadastrar um novo território
         printf("2.Listar Territorios\n"); // imprime a opção 2 para listar os territórios cadastrados
         printf("3.Jogar\n"); // imprime a opção 3 para começar o jogo
