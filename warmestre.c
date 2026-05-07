@@ -201,3 +201,46 @@ void atacar(struct Territorio* territorios, int atk, int def) { // Função que 
         atacante->tropas--; // Remove uma tropa do atacante
     }
 } // Fim da função
+
+void atribuirmissao(char* destino, char* missoes[], int totalmissoes) { // Função que sorteia uma missão para o jogador
+    // Parâmetros: string para armazenar a missão, array de missões, total de missões
+
+    int sorteio = rand() % totalmissoes; // Gera um índice aleatório entre 0 e totalmissoes-1
+    strcpy(destino, missoes[sorteio]); // Copia a missão sorteada para a string destino
+} // Fim da função
+
+void exibirmissao(char* missao) { // Função que exibe a missão atual do jogador
+    printf("\n=== SUA MISSÃO ===\n%s\n", missao); // Exibe a missão formatada na tela
+} // Fim da função
+
+int verificarMissao(char* missao, struct Territorio* mapa, int tamanho, char* corJogador) { // Função que verifica se a missão foi cumprida
+    // Parâmetros: string da missão, vetor de territórios, quantidade total, cor do jogador
+
+    if (strcmp(missao, "Conquistar 2 territorios") == 0) { // Verifica se a missão é "Conquistar 2 territórios"
+
+        int contador = 0; // Inicializa contador de territórios da cor do jogador
+
+        for (int i = 0; i < tamanho; i++) { // Loop para cada território
+            if (strcmp(mapa[i].cor, corJogador) == 0) { // Se a cor for a do jogador
+                contador++; // Incrementa o contador
+            }
+        } // Fim do loop
+
+        if (contador >= 2) return 1; // Se tem 2 ou mais, missão cumprida, retorna 1
+    } // Fim da verificação
+
+    if (strcmp(missao, "Eliminar todos da cor Verde") == 0) { // Verifica se a missão é "Eliminar todos verdes"
+        for (int i = 0; i < tamanho; i++) { // Loop para cada território
+            if (strcmp(mapa[i].cor, "Verde") == 0) { // Se encontrar um território verde
+                return 0; // Missão não cumprida ainda, retorna 0
+            }
+        } // Fim do loop
+        return 1; // Se não encontrou nenhum verde, missão cumprida, retorna 1
+    } // Fim da verificação
+
+    return 0; // Se nenhuma missão foi verificada, retorna 0
+} // Fim da função
+
+void liberarmemoria(struct Territorio* territorios) { // Função que libera a memória alocada
+    free(territorios); // Libera o espaço em memória do vetor de territórios
+} // Fim da função
