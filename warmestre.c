@@ -12,3 +12,16 @@ struct Territorio { // Define uma estrutura chamada Territorio com três campos
     char cor[10]; // Array de 10 caracteres para armazenar a cor do território
     int tropas; // Inteiro para armazenar a quantidade de tropas no território
 }; // Fim da definição da estrutura
+
+// ====== DECLARAÇÃO DOS PROTÓTIPOS DAS FUNÇÕES ======
+
+void limparbuffentrada(); // protótipo: função para limpar o buffer de entrada
+void exibirmenu(); // protótipo: função para exibir o menu do jogo
+void cadastrarterritorio(struct Territorio* territorios, int* totalterritorios, int capacidade); // protótipo: cadastra um novo território
+void listarterritorios(struct Territorio* territorios, int totalterritorios); // protótipo: lista todos os territórios cadastrados
+void atacar(struct Territorio* territorios, int atk, int def); // protótipo: realiza um ataque entre dois territórios
+void liberarmemoria(struct Territorio* territorios); // protótipo: libera a memória alocada
+
+void atribuirmissao(char* destino, char* missoes[], int totalmissoes); // protótipo: atribui uma missão aleatória
+void exibirmissao(char* missao); // protótipo: exibe a missão atual do jogador
+int verificarMissao(char* missao, struct Territorio* mapa, int tamanho, char* corJogador); // protótipo: verifica se a missão foi cumprida
