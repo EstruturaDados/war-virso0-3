@@ -226,7 +226,7 @@ int verificarMissao(char* missao, struct Territorio* mapa, int tamanho, char* co
             }
         } // Fim do loop
 
-        if (contador >= 2) return 1; // Se tem 2 ou mais, missão cumprida, retorna 1
+        if (contador >= 3) return 1; // Se tem 3 ou mais, missão cumprida, retorna 1
     } // Fim da verificação
 
     if (strcmp(missao, "Eliminar todos da cor Verde") == 0) { // Verifica se a missão é "Eliminar todos verdes"
