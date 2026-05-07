@@ -54,3 +54,66 @@ int main() { // Início da função principal
 
     int totalterritorios = 0; // Inicializa contador de territórios cadastrados em zero
     int opcao; // Variável para armazenar a opção escolhida pelo usuário
+
+    do { // Início do loop do menu principal
+        exibirmenu(); // Exibe as opções do menu
+        scanf("%d", &opcao); // Lê a opção do usuário
+        limparbuffentrada(); // Limpa o buffer de entrada
+
+        switch (opcao) { // Inicia a estrutura condicional múltipla
+
+        case 1: // Se o usuário escolher a opção 1 (Cadastrar Território)
+            cadastrarterritorio(territorios, &totalterritorios, capacidade); // Chama a função de cadastro
+            break; // Sai do switch
+
+        case 2: // Se o usuário escolher a opção 2 (Atacar)
+            if (totalterritorios < 2) { // Verifica se há pelo menos 2 territórios cadastrados
+                printf("Precisa de pelo menos 2 territorios\n"); // Se não, exibe mensagem
+            } else { // Se sim, permite o ataque
+                int atk, def; // Declara variáveis para os índices do atacante e defensor
+
+                listarterritorios(territorios, totalterritorios); // Mostra o mapa com todos os territórios
+
+                printf("Indice atacante: "); // Pede o índice do território atacante
+                scanf("%d", &atk); // Lê o índice do atacante
+
+                printf("Indice defensor: "); // Pede o índice do território defensor
+                scanf("%d", &def); // Lê o índice do defensor
+                limparbuffentrada(); // Limpa o buffer de entrada
+
+                if (atk < 0 || atk >= totalterritorios || // Verifica se o índice do atacante é válido
+                    def < 0 || def >= totalterritorios || // Verifica se o índice do defensor é válido
+                    atk == def) { // Verifica se atacante e defensor são diferentes
+                    printf("Indices invalidos\n"); // Se inválido, exibe mensagem de erro
+                    break; // Sai do case 2
+                }
+
+                atacar(territorios, atk, def); // Realiza o ataque entre os dois territórios
+
+                listarterritorios(territorios, totalterritorios); // Mostra o mapa atualizado após o ataque
+
+                char corJogador[10]; // Declara array para armazenar a cor do "jogador" (quem atacou)
+                strcpy(corJogador, territorios[atk].cor); // Copia a cor do atacante para a variável corJogador
+
+                if (verificarMissao(missaojogador, territorios, totalterritorios, corJogador)) { // Verifica se a missão foi cumprida
+                    printf("\n🏆 PARABENS! VOCE CUMPRIU SUA MISSAO!\n"); // Se cumpriu, exibe mensagem de vitória
+                    opcao = 3; // Define opcao como 3 para sair do loop
+                }
+            }
+            break; // Sai do case 2
+
+        case 3: // Se o usuário escolher a opção 3 (Sair)
+            printf("Saindo do programa...\n"); // Exibe mensagem de encerramento
+            break; // Sai do switch
+
+        default: // Se escolher qualquer outra opção
+            printf("Opcao invalida.\n"); // Exibe mensagem de erro
+        }
+
+    } while (opcao != 3); // Continua o loop enquanto opcao for diferente de 3
+
+    liberarmemoria(territorios); // Libera a memória alocada para o vetor de territórios
+    free(missaojogador); // Libera a memória alocada para a string da missão
+
+    return 0; // Retorna 0 indicando que o programa terminou com sucesso
+}
