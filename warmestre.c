@@ -117,3 +117,59 @@ int main() { // Início da função principal
 
     return 0; // Retorna 0 indicando que o programa terminou com sucesso
 }
+
+// ====== DEFINIÇÃO DAS FUNÇÕES ======
+
+void limparbuffentrada() { // Função que limpa o buffer de entrada
+    int c; // Declara variável inteira para armazenar caracteres lidos
+    while ((c = getchar()) != '\n' && c != EOF); // Lê caracteres até encontrar nova linha ou fim de arquivo
+} // Fim da função
+
+void exibirmenu() { // Função que exibe o menu do jogo
+    printf("\nMenu:\n"); // Exibe o título "Menu:"
+    printf("1. Cadastrar Territorio\n"); // Exibe opção 1
+    printf("2. Atacar\n"); // Exibe opção 2
+    printf("3. Sair\n"); // Exibe opção 3
+    printf("Escolha: "); // Pede para o usuário escolher
+} // Fim da função
+
+void cadastrarterritorio(struct Territorio* territorios, int* totalterritorios, int capacidade) { // Função para cadastrar um novo território
+    // Parâmetros: ponteiro para o vetor de territórios, ponteiro para a quantidade total, capacidade máxima
+
+    if (*totalterritorios >= capacidade) { // Verifica se já atingiu a capacidade máxima
+        printf("Capacidade maxima atingida\n"); // Se sim, exibe mensagem
+        return; // Encerra a função sem cadastrar
+    }
+
+    printf("Nome: "); // Pede o nome do novo território
+    fgets(territorios[*totalterritorios].nome, 30, stdin); // Lê até 30 caracteres do nome
+    territorios[*totalterritorios].nome[strcspn(territorios[*totalterritorios].nome, "\n")] = '\0'; // Remove o '\n' do final
+
+    printf("Cor: "); // Pede a cor do novo território
+    fgets(territorios[*totalterritorios].cor, 10, stdin); // Lê até 10 caracteres da cor
+    territorios[*totalterritorios].cor[strcspn(territorios[*totalterritorios].cor, "\n")] = '\0'; // Remove o '\n' do final
+
+    printf("Tropas: "); // Pede o número de tropas
+    scanf("%d", &territorios[*totalterritorios].tropas); // Lê e armazena a quantidade de tropas
+    limparbuffentrada(); // Limpa o buffer após scanf
+
+    (*totalterritorios)++; // Incrementa o contador de territórios cadastrados
+} // Fim da função
+
+
+void listarterritorios(struct Territorio* territorios, int totalterritorios) { // Função que lista todos os territórios
+
+    if (totalterritorios == 0) { // Verifica se há algum território cadastrado
+        printf("Nenhum territorio cadastrado\n"); // Se não, exibe mensagem
+        return; // Encerra a função
+    }
+
+    printf("\n--- MAPA ---\n"); // Exibe cabeçalho do mapa
+    for (int i = 0; i < totalterritorios; i++) { // Loop para cada território cadastrado
+        printf("[%d] %s | %s | %d tropas\n", // Exibe: índice, nome, cor e tropas
+               i, // Índice do território
+               territorios[i].nome, // Nome do território
+               territorios[i].cor, // Cor do território
+               territorios[i].tropas); // Quantidade de tropas
+    } // Fim do loop
+} // Fim da função
