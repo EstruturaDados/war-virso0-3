@@ -25,3 +25,32 @@ void liberarmemoria(struct Territorio* territorios); // protótipo: libera a mem
 void atribuirmissao(char* destino, char* missoes[], int totalmissoes); // protótipo: atribui uma missão aleatória
 void exibirmissao(char* missao); // protótipo: exibe a missão atual do jogador
 int verificarMissao(char* missao, struct Territorio* mapa, int tamanho, char* corJogador); // protótipo: verifica se a missão foi cumprida
+
+// ====== FUNÇÃO PRINCIPAL ======
+
+int main() { // Início da função principal
+    srand(time(NULL)); // Inicializa o gerador de números aleatórios com a hora atual do sistema
+
+    int capacidade; // Declara uma variável inteira para armazenar a capacidade máxima
+    printf("Digite o numero maximo de territorios: "); // Exibe uma mensagem pedindo a capacidade máxima
+    scanf("%d", &capacidade); // Lê um inteiro do usuário e armazena em capacidade
+    limparbuffentrada(); // Limpa o buffer para evitar problemas com próximas leituras
+
+    struct Territorio *territorios = calloc(capacidade, sizeof(struct Territorio)); // Aloca memória para um vetor de territórios
+
+    if (territorios == NULL) { // Verifica se a alocação de memória falhou
+        printf("Erro ao alocar memoria.\n"); // Se falhou, exibe mensagem de erro
+        return 1; // Retorna 1 indicando erro
+    }
+
+    char* missoes[] = { // Declara um array de strings com as missões disponíveis
+        "Conquistar 2 territorios", // Primeira missão possível
+        "Eliminar todos da cor Verde" // Segunda missão possível
+    };
+
+    char* missaojogador = malloc(100); // Aloca 100 bytes para armazenar a missão do jogador
+    atribuirmissao(missaojogador, missoes, 2); // Sorteia e atribui uma missão aleatória ao jogador
+    exibirmissao(missaojogador); // Exibe a missão para o jogador
+
+    int totalterritorios = 0; // Inicializa contador de territórios cadastrados em zero
+    int opcao; // Variável para armazenar a opção escolhida pelo usuário
