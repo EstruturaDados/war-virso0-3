@@ -173,3 +173,31 @@ void listarterritorios(struct Territorio* territorios, int totalterritorios) { /
                territorios[i].tropas); // Quantidade de tropas
     } // Fim do loop
 } // Fim da função
+void atacar(struct Territorio* territorios, int atk, int def) { // Função que simula um ataque entre dois territórios
+    // Parâmetros: ponteiro para o vetor, índice do atacante, índice do defensor
+
+    struct Territorio* atacante = &territorios[atk]; // Cria ponteiro para o território atacante
+    struct Territorio* defensor = &territorios[def]; // Cria ponteiro para o território defensor
+
+    int dadoAtk = rand() % 6 + 1; // Gera número aleatório de 1 a 6 para o atacante
+    int dadoDef = rand() % 6 + 1; // Gera número aleatório de 1 a 6 para o defensor
+
+    printf("\n--- ATAQUE ---\n"); // Exibe cabeçalho do resultado do ataque
+    printf("Atacante (%s) tirou %d\n", atacante->nome, dadoAtk); // Exibe nome e resultado do atacante
+    printf("Defensor (%s) tirou %d\n", defensor->nome, dadoDef); // Exibe nome e resultado do defensor
+
+    if (dadoAtk > dadoDef) { // Se o resultado do atacante for maior
+        defensor->tropas--; // Remove uma tropa do defensor
+
+        if (defensor->tropas <= 0) { // Se o defensor ficou sem tropas
+            printf("Territorio conquistado!\n"); // Exibe mensagem de conquista
+
+            strcpy(defensor->cor, atacante->cor); // Muda a cor do território para a do atacante
+            defensor->tropas = atacante->tropas / 2; // Transfere metade das tropas do atacante
+            atacante->tropas /= 2; // Reduz as tropas do atacante pela metade
+        }
+
+    } else { // Se o defensor venceu ou empatou
+        atacante->tropas--; // Remove uma tropa do atacante
+    }
+} // Fim da função
